@@ -4,7 +4,7 @@ import 'package:flutter_application_1/core/widgets/icons.dart';
 import 'package:flutter_application_1/core/theme/app_theme.dart';
 import 'widgets/bounce_dice_widget.dart';
 import 'widgets/dice_roll_animation.dart';
-import 'widgets/result_modal.dart';
+import 'widgets/result_modal/result_modal.dart';
 
 /// 홈 화면
 class HomeScreen extends StatefulWidget {

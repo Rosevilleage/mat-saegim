@@ -12,10 +12,6 @@ class AnimationUtils {
     return t * t * t;
   }
 
-  /// Tailwind CSS animate-bounce 값 계산
-  /// keyframes:
-  ///   0%, 100%: translateY(-25%) with cubic-bezier(0.8, 0, 1, 1)
-  ///   50%: translateY(0) with cubic-bezier(0, 0, 0.2, 1)
   static double bounceValue(double animationValue) {
     if (animationValue < 0.5) {
       // 0.0 -> 0.5: -25%에서 0으로 (아래로 떨어짐)
@@ -30,4 +26,3 @@ class AnimationUtils {
     }
   }
 }
-
