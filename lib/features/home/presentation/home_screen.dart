@@ -4,8 +4,9 @@ import 'package:flutter_application_1/core/theme/app_theme.dart';
 import 'package:flutter_application_1/core/widgets/icons.dart';
 
 import '../domain/menu_repository.dart';
+import 'test_display_screen.dart';
 import 'widgets/bounce_dice_widget.dart';
-import 'widgets/dice_roll_animation.dart';
+import 'widgets/dice_roll/dice_roll_overlay.dart';
 import 'widgets/result_modal/result_modal.dart';
 
 /// 홈 화면
@@ -20,9 +21,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _bounceAnimation;
 
-  // 주사위 던지기 애니메이션
-  late AnimationController _diceRollController;
-  late Animation<double> _diceRollAnimation;
   bool _isRolling = false;
   bool _showModal = false;
   String? _selectedMenu;
@@ -44,31 +42,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
     // 애니메이션 시작 (모든 초기화 완료 후)
     _animationController.repeat();
-
-    // 주사위 던지기 애니메이션
-    _diceRollController = AnimationController(
-      duration: const Duration(milliseconds: 1500),
-      vsync: this,
-    );
-
-    _diceRollAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _diceRollController, curve: Curves.easeOut),
-    );
-
-    _diceRollController.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        setState(() {
-          _isRolling = false;
-          _showModal = true;
-        });
-      }
-    });
   }
 
   @override
   void dispose() {
     _animationController.dispose();
-    _diceRollController.dispose();
     super.dispose();
   }
 
@@ -83,9 +61,13 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       _showModal = false;
       _selectedMenu = selectedMenu;
     });
+  }
 
-    _diceRollController.reset();
-    _diceRollController.forward();
+  void _handleRollCompleted() {
+    setState(() {
+      _isRolling = false;
+      _showModal = true;
+    });
   }
 
   @override
@@ -210,7 +192,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                 borderRadius: BorderRadius.circular(16),
                               ),
                               elevation: 4,
-                              shadowColor: Colors.black.withOpacity(0.1),
+                              shadowColor: Colors.black.withValues(alpha: 0.1),
                             ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -245,7 +227,13 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 child: BottomNavigationBar(
                   currentIndex: 0,
                   onTap: (index) {
-                    // 탭 전환 로직
+                    if (index == 3) {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => const TestDisplayScreen(),
+                        ),
+                      );
+                    }
                   },
                   type: BottomNavigationBarType.fixed,
                   backgroundColor: Colors.white,
@@ -283,13 +271,19 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                       icon: PersonIcon(size: 24, color: AppTheme.textSecondary),
                       label: '내정보',
                     ),
+                    const BottomNavigationBarItem(
+                      icon: DiceIcon(size: 24, color: AppTheme.textSecondary),
+                      label: 'test',
+                    ),
                   ],
                 ),
               ),
             ),
 
-            // 주사위 던지기 애니메이션
-            if (_isRolling) DiceRollAnimation(animation: _diceRollAnimation),
+            DiceRollOverlay(
+              isRolling: _isRolling,
+              onCompleted: _handleRollCompleted,
+            ),
 
             // 결과 모달 (하단에 붙어있는 bottom sheet)
             if (_showModal && _selectedMenu != null)

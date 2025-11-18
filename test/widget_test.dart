@@ -8,7 +8,7 @@
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:flutter_application_1/app.dart';
-import 'package:flutter_application_1/features/home/presentation/widgets/dice_roll_animation.dart';
+import 'package:flutter_application_1/features/home/presentation/widgets/dice_roll/dice_roll_overlay.dart';
 
 void main() {
   testWidgets('홈 화면에서 주사위 버튼을 누르면 애니메이션이 나타난다', (tester) async {
@@ -18,8 +18,19 @@ void main() {
     expect(find.text('주사위를 던져 오늘의 메뉴를 골라보세요'), findsOneWidget);
 
     await tester.tap(find.text('주사위 던지기'));
-    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
 
-    expect(find.byType(DiceRollAnimation), findsOneWidget);
+    expect(find.byType(DiceRollOverlay), findsOneWidget);
+  });
+
+  testWidgets('Bottom app bar의 test 버튼을 누르면 test_display로 이동한다', (
+    tester,
+  ) async {
+    await tester.pumpWidget(const App());
+
+    await tester.tap(find.text('test'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('정육면체 미리보기'), findsOneWidget);
   });
 }

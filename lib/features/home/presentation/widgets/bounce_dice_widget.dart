@@ -6,10 +6,7 @@ import 'package:flutter_application_1/core/utils/animation_utils.dart';
 class BounceDiceWidget extends StatelessWidget {
   final Animation<double> animation;
 
-  const BounceDiceWidget({
-    super.key,
-    required this.animation,
-  });
+  const BounceDiceWidget({super.key, required this.animation});
 
   @override
   Widget build(BuildContext context) {
@@ -27,20 +24,17 @@ class BounceDiceWidget extends StatelessWidget {
               borderRadius: BorderRadius.circular(24),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.25),
+                  color: Colors.black.withValues(alpha: 0.25),
                   blurRadius: 25,
                   offset: const Offset(0, 25),
                   spreadRadius: -12,
                 ),
               ],
             ),
-            child: const Center(
-              child: DiceIcon(size: 64, color: Colors.white),
-            ),
+            child: const Center(child: DiceIcon(size: 64, color: Colors.white)),
           ),
         );
       },
     );
   }
 }
-
